@@ -20,7 +20,6 @@ export class ProductController {
 
 	@Get(':id')
 	async getById(@Param('id') id: string) {
-		console.log(id);
 		return this.productService.getById(id);
 	}
 

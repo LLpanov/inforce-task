@@ -18,9 +18,9 @@ const initialState: CommentState = {
 };
 
 
-export const getCommentById = createAsyncThunk('comment/getCommentById', async (id: number) => {
+export const getCommentById = createAsyncThunk('comment/getCommentById', async (productId: number) => {
 	try {
-		return await commentService.getById(id);
+		return await commentService.getByProductId(productId);
 	} catch (error) {
 		throw new Error('Failed to fetch comment');
 	}
@@ -63,7 +63,7 @@ const commentSlice = createSlice({
 			})
 			.addCase(getCommentById.fulfilled, (state, action) => {
 				state.loading = false;
-				state.selectedComment = action.payload;
+				state.comments = action.payload;
 			})
 			.addCase(getCommentById.rejected, (state, action) => {
 				state.loading = false;

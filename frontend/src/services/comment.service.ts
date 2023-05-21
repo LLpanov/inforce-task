@@ -5,7 +5,7 @@ import { urls } from '@/config/urls.ts';
 import { IProduct } from '@/interfaces/product.interface.ts';
 
 export const commentService = {
-	getById: (id: number): Promise<IComment> => axiosService.get(`${urls.comment}/${id}`).then(res => res.data),
+	getByProductId: (productId: number): Promise<IComment[]> => axiosService.get(`${urls.comment}?productId=${productId}`).then(res => res.data),
 
 	updateComment: (id: number, data: IComment): Promise<IProduct> => axiosService.put(`/comment/${id}`, data).then(res => res.data),
 

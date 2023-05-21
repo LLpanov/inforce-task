@@ -51,6 +51,7 @@ export class ProductService {
 	async deleteProduct(id: string): Promise<DeleteResult> {
 		try {
 			const product = await this.getById(id);
+			console.log(product);
 			return this.productRepository.delete(product);
 		} catch (e) {
 			throw new HttpException(`The product haven't been deleted ${e.message}`, HttpStatus.BAD_REQUEST);

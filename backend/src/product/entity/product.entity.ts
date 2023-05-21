@@ -22,7 +22,7 @@ export class ProductEntity {
 	@Column()
 	weight: string;
 
-	@OneToMany(() => CommentEntity, comment => comment.product)
+	@OneToMany(() => CommentEntity, comment => comment.product, { cascade: true })
 	@JoinColumn({ name: 'productId' })
 	comments: CommentEntity[];
 }

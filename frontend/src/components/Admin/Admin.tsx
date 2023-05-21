@@ -1,9 +1,12 @@
 import { FC } from 'react';
+import { Center } from '@chakra-ui/react';
 
 const Admin: FC = () => {
 	return (
 		<>
-			<div>create product</div>
+			<Center height={'100vh'}>
+				doesn't work...
+			</Center>
 		</>
 	);
 };

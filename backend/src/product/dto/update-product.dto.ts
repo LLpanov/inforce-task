@@ -3,10 +3,10 @@ import { Type } from 'class-transformer';
 
 export class SizeDto {
 	@IsInt()
-	public width: number;
+	public width?: number;
 
 	@IsInt()
-	public height: number;
+	public height?: number;
 }
 
 export class UpdateProductDto {

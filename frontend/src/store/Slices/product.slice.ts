@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import { IProduct } from '@/interfaces/product.interface.ts';
 import { productService } from '@/services/product.service.ts';
+import { axiosService } from '@/services/axios.service.ts';
 
 interface ProductState {
 	products: IProduct[];
@@ -18,7 +19,7 @@ const initialState: ProductState = {
 };
 
 
-	export const fetchProducts = createAsyncThunk('product/fetchProducts', async () => {
+export const fetchProducts = createAsyncThunk('product/fetchProducts', async () => {
 	try {
 		return await productService.getAll();
 	} catch (error) {
@@ -26,7 +27,7 @@ const initialState: ProductState = {
 	}
 });
 
-	export const getProductById = createAsyncThunk('product/getProductById', async (id: number) => {
+export const getProductById = createAsyncThunk('product/getProductById', async (id: number) => {
 	try {
 		return await productService.getById(id);
 	} catch (error) {
@@ -34,7 +35,7 @@ const initialState: ProductState = {
 	}
 });
 
-	export const createProduct = createAsyncThunk('product/createProduct', async (product: IProduct) => {
+export const createProduct = createAsyncThunk('product/createProduct', async (product: IProduct) => {
 	try {
 		return await productService.createProduct(product);
 	} catch (error) {
@@ -42,13 +43,18 @@ const initialState: ProductState = {
 	}
 });
 
-	export const updateProduct = createAsyncThunk('product/updateProduct', async (product: IProduct) => {
-	try {
-		return await productService.updateProduct(product.id, product);
-	} catch (error) {
-		throw new Error('Failed to update product');
+export const updateProduct = createAsyncThunk(
+	'product/updateProduct',
+	async ({ id, updatedProduct }: { id: number; updatedProduct: IProduct }) => {
+		try {
+			const response = await axiosService.put(`/product/admin/${id}`, updatedProduct);
+			console.log(response)
+			return response.data;
+		} catch (error) {
+			throw new Error('Failed to update product');
+		}
 	}
-});
+)
 
 export const deleteProduct = createAsyncThunk('product/deleteProduct', async (id: number) => {
 	try {
@@ -107,29 +113,25 @@ const productSlice = createSlice({
 			})
 			.addCase(updateProduct.fulfilled, (state, action) => {
 				state.loading = false;
-				const updatedProduct = action.payload;
-				const index = state.products.findIndex(p => p.id === updatedProduct.id);
+				const { id, ...data } = action.payload;
+				const index = state.products.findIndex(product => product.id === id);
 				if (index !== -1) {
-					state.products[index] = updatedProduct;
+					state.products[index] = { ...state.products[index], ...data };
 				}
 			})
 			.addCase(updateProduct.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.error.message || 'Fail';
 			})
-			.addCase(deleteProduct.pending, state => {
-				state.loading = true;
-				state.error = null;
-			})
+
 			.addCase(deleteProduct.fulfilled, (state, action) => {
 				state.loading = false;
-				const deletedProductId = action.payload;
-				state.products = state.products.filter(p => p.id !== deletedProductId);
-			})
-			.addCase(deleteProduct.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.error.message || 'Fail';
+				const index = state.products.findIndex(product => product.id === action.payload);
+				if (index !== -1) {
+					state.products.splice(index, 1);
+				}
 			});
+
 	}
 });
 

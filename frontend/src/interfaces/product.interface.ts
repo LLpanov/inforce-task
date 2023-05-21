@@ -1,5 +1,5 @@
 export interface IProduct {
-	id:number;
+	id?:number;
 	imageUrl?: string;
 	name: string;
 	count: number;
@@ -8,7 +8,7 @@ export interface IProduct {
 
 }
 
-interface ISize {
+export  interface ISize {
 	width: number;
   height: number;
 }

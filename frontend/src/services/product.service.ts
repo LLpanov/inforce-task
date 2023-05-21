@@ -5,7 +5,7 @@ import { IProduct } from '@/interfaces/product.interface.ts';
 
 
 export const productService = {
-	getAll: (): Promise<IProduct[]> => axiosService.get(urls.product),
+	getAll: (): Promise<IProduct[]> => axiosService.get(urls.product).then(res => res.data),
 
 	getById: (id: number): Promise<IProduct> => axiosService.get(`${urls.product}/${id}`).then(res => res.data),
 
@@ -14,5 +14,5 @@ export const productService = {
 	updateProduct: (id: number, data: IProduct): Promise<IProduct> =>
 		axiosService.put(`/product/admin/${id}`, data).then(res => res.data),
 
-	deleteProduct: (id: number): Promise<void> => axiosService.delete(`${urls.product}/${id}`)
+	deleteProduct: (id: number): Promise<void> => axiosService.delete(`/product/admin/${id}`)
 };
